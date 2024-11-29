@@ -1,9 +1,10 @@
 #+title: A.I.U.Sh.
 
+#+begin_html
+<img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/rumenmitov/aiush/.github%2Fworkflows%2Fcmake-single-platform.yml?style=for-the-badge" />
 
-[[][https://img.shields.io/github/actions/workflow/status/rumenmitov/aiush/.github%2Fworkflows%2Fcmake-single-platform.yml?style=for-the-badge]]
-
-[[][https://img.shields.io/github/license/rumenmitov/aiush?style=for-the-badge]]
+<img alt="License" src="https://img.shields.io/github/license/rumenmitov/aiush?style=for-the-badge" />
+#+end_html
 
 
 * The Artificially Intelligent Universal Shell
