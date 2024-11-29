@@ -16,7 +16,6 @@ namespace Tests {
         sleep(1);
         hist.update("cd");
 
-
         return hist.get_score("cd") < hist.get_score("echo");
     }
 }

@@ -2,16 +2,20 @@
 
 #include <ctime>
 #include <unordered_map>
-#include <cstdint>
 #include <string>
+#include <deque>
 
 namespace Weigh {
     using namespace std;
 
+    struct CmdEntry {
+        string val;
+        deque<time_t> occurences;
+    };
+
     class CmdHistory {
         private:
-            unordered_map<string, uint32_t> frequency; 
-            unordered_map<string, time_t> recency;
+           unordered_map<string, CmdEntry> entries;
 
         public:
             CmdHistory(void) {};

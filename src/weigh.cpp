@@ -3,25 +3,41 @@
 namespace Weigh {
 
     float CmdHistory::get_score(const string& cmd) {
-        if (frequency.count(cmd) == 0 || recency.count(cmd) == 0)
+        // entry has not been seen before
+        if (entries.count(cmd) == 0)
             return 0;
 
-        float freq = (float) frequency[cmd];
-        float rec  = ( (float) recency[cmd]) / 1000;
+        CmdEntry entry = entries[cmd];
+
+        // remove entries older than 60 seconds
+        while (! entry.occurences.empty()) {
+            // diff is measured in seconds
+            int diff = difftime(time(nullptr), entry.occurences.front());
+
+            if (diff > 60) entry.occurences.pop_front();
+            else break;
+        }
+
+        // freq measures occurences in the last 60s
+        float freq = (float) entry.occurences.size();
+
+        // rec measures the most recent entry
+        float rec  = (float)entry.occurences.back() / CLOCKS_PER_SEC;
 
         return (freq * 3 / 4) + (rec / 4);
     }
 
     void CmdHistory::update(const string& cmd) {
-        if (frequency.count(cmd) == 0) {
-            frequency.insert(pair(cmd, 0));
-        }
+        if (entries.count(cmd) == 0) {
+            CmdEntry entry {
+                .val = cmd
+            };
 
-        if (recency.count(cmd) == 0) {
-            recency.insert(pair(cmd, 0));
+            entry.occurences.push_back(time(nullptr));
+            entries.insert(pair(cmd, entry));
+        } else {
+            CmdEntry *entry = &entries[cmd];
+            entry->occurences.push_back(time(nullptr));
         }
-
-        frequency[cmd]++;
-        recency[cmd] = time(nullptr);
     }
 }
