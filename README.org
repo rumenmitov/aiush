@@ -1,0 +1,37 @@
+#+title: A.I.U.Sh.
+
+
+[[https://img.shields.io/github/actions/workflow/status/rumenmitov/aiush/.github%2Fworkflows%2Fcmake-single-platform.yml?style=for-the-badge]]
+
+[[https://img.shields.io/github/license/rumenmitov/aiush?style=for-the-badge]]
+
+
+* The Artificially Intelligent Universal Shell
+This shell was inspired by [[https://github.com/ajeetdsouza/zoxide][zoxide]] in that it auto-corrects the user input to help speedup the development process. In our case the user input are the shell commands.
+
+Our shell works by building a history of the user's successfully-executed commands as well as timestamps on when the command was executed. Then, when the user mistypes a command similar to what we have in the history, we recommend the history entry with the highest score. The score is based on how frequently the history entry has been called in a given time frame and on how recently the entry had last been called.
+
+* Usage
+#+begin_src shell
+  cmake -DCMAKE_BUILD_TYPE=Release .
+  cmake --build .
+  ./aiush
+#+end_src
+
+** Run Tests
+#+begin_src shell
+  cmake .
+  cmake --build .
+  ctest --test-dir tests
+#+end_src
+
+* Contributing
+The core maintainers are:
+- [[https://github.com/rumenmitov][@rumenmitov]]
+- [[https://github.com/avalean07][@avalean07]]
+- [[https://github.com/mehemmed0][@mehemmed0]]
+To contribute please adhere to the following directory structure:
+- *src* - main entry point to the program
+- *lib* - all the utilities called from the entry point
+- *include* - all the headers
+- *tests* - unit tests
