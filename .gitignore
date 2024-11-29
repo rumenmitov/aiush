@@ -5,6 +5,8 @@
 /CMakeFiles/
 /cmake_install.cmake
 /Makefile
+/DartConfiguration.tcl
+/compile_commands.json
 
 /tests/*
 !/tests/CMakeLists.txt
