@@ -1,4 +1,3 @@
-
 #ifdef TESTS
 #include <cassert>
 #include "tests/test-weigh.hpp"
