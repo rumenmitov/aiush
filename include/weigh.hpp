@@ -8,19 +8,34 @@
 namespace Weigh {
     using namespace std;
 
+    /**
+     * @brief Keeps track of how many times the command was called and when it was called.
+     */
     struct CmdEntry {
-        string val;
         deque<time_t> occurences;
     };
 
+    /**
+     * @brief Manages shell history.
+     */
     class CmdHistory {
-        private:
-           unordered_map<string, CmdEntry> entries;
+    private:
+	/**
+	   @field Matches command name to all of its occurences.
+	*/
+	unordered_map<string, CmdEntry> entries;
 
-        public:
-            CmdHistory(void) {};
-            void update(const string&);
-            float get_score(const string&);
+    public:
+	CmdHistory(void) {};
+
+	/**
+	 * @brief Updates occurences of an entry. Creates a new entry if there was no match.
+	 */
+	void update(const string&);
+
+	/**
+	 * @brief Gets score of a given entry. Returns 0, if entry does not exist.
+	 */
+	float get_score(const string&);
     };
 }
-

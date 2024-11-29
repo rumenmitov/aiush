@@ -29,9 +29,7 @@ namespace Weigh {
 
     void CmdHistory::update(const string& cmd) {
         if (entries.count(cmd) == 0) {
-            CmdEntry entry {
-                .val = cmd
-            };
+            CmdEntry entry;
 
             entry.occurences.push_back(time(nullptr));
             entries.insert(pair(cmd, entry));

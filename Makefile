@@ -14,6 +14,6 @@ release:
 	@$(CC) -o build/release/aiush -I include $(SRC) $(FLAGS) -O3
 
 clean:
-	@rm -rf build/
+	@rm -rf build/ *~ **/*~
 
 
