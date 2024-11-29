@@ -1,8 +1,11 @@
 include(CTest)
 
-add_executable(test-weigh
-  ./test-weigh.cpp
-)
-target_link_libraries(test-weigh PRIVATE "${UTILLIB}")
+set(TESTER "tester")
 
-add_test(NAME test-weigh COMMAND test-weigh)
+
+add_executable("${TESTER}"
+  ./test-main.cpp
+)
+target_link_libraries("${TESTER}" PRIVATE "${UTILLIB}")
+
+add_test(NAME "${TESTER}" COMMAND "${TESTER}")
