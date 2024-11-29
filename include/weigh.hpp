@@ -13,7 +13,7 @@ namespace Weigh {
             unordered_map<string, uint32_t> frequency; 
             unordered_map<string, time_t> recency;
 
-            uint32_t get_score(const string&);
+            float get_score(const string&);
 
         public:
             CmdHistory(void) {};
