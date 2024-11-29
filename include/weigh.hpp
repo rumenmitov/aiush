@@ -19,6 +19,13 @@ namespace Weigh {
      * @brief Manages shell history.
      */
     class CmdHistory {
+
+	/* NOTE
+	   Weights for frequency and recency should add up to 1.0.
+	*/
+	static constexpr float RecencyBias = 0.75;
+	static constexpr  float FrequencyBias = 0.25;
+	
     private:
 	/**
 	   @field Matches command name to all of its occurences.

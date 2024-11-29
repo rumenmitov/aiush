@@ -24,9 +24,10 @@ namespace Weigh {
         // rec measures the most recent entry
         float rec  = (float)entry.occurences.back() / CLOCKS_PER_SEC;
 
-        return (freq * 3 / 4) + (rec / 4);
+        return (freq * FrequencyBias) + (rec * RecencyBias);
     }
 
+    
     void CmdHistory::update(const string& cmd) {
         if (entries.count(cmd) == 0) {
             CmdEntry entry;
