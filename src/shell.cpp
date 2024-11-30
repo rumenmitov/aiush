@@ -25,16 +25,45 @@ void executeCommand(std::vector<std::string>& args, int inputFd = 0, int outputF
     std::vector<char*> argv;
     for (auto& arg : args) argv.push_back(&arg[0]);
     argv.push_back(nullptr);
-    if (fork() == 0) {
+
+    pid_t pid = fork();
+    if (pid == 0) {
+        // Child process
         if (inputFd != 0) { dup2(inputFd, 0); close(inputFd); }
         if (outputFd != 1) { dup2(outputFd, 1); close(outputFd); }
         execvp(argv[0], argv.data());
         perror("execvp failed");
         exit(1);
-    } else {
-        wait(nullptr);
+         // If execvp fails, exit with error
+    } else if (pid > 0) {
+        // Parent process
+        int status;
+        waitpid(pid, &status, 0); // Wait for the child 
+        
+        // Check if child process terminated normally
+        if (WIFEXITED(status)) {
+            int exitCode = WEXITSTATUS(status);
+            if (exitCode == 0) {
+                std::cout << "Command executed successfully.\n";
+            } else {
+                std::cout << "Command execution failed with exit code " << exitCode << ".\n";
+            }
+        }
+        // Check if child process was terminated by a signal
+       // else if (WIFSIGNALED(status)) {
+        //    int signal = WTERMSIG(status);
+       //     std::cout << "Command terminated by signal " << signal << ".\n";
+       // }
+        // Handle other possible statuses
+        else {
+            std::cout << "Command terminated abnormally.\n";
+        }
+
         if (inputFd != 0) close(inputFd);
         if (outputFd != 1) close(outputFd);
+    } else {
+        // Fork failed
+        perror("fork failed");
     }
 }
 
@@ -82,6 +111,7 @@ int main() {
     while (true) {
         std::cout << "aiush> ";
         std::getline(std::cin, input);
+        
         parseAndExecute(input);
     }
     return 0;
