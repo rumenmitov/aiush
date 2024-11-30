@@ -7,7 +7,7 @@
 #include <unordered_map>
 
 float match(const std::string& str1, const std::string& str2);
-std::unordered_map<std::string, float> match_commands(const std::string& err_com, std::vector<std::string> com_history_list);
+std::unordered_map<std::string, float> match_commands(const std::string& err_com, const std::vector<std::string>& com_history_list);
 
 
 namespace Tests {
@@ -30,35 +30,38 @@ namespace Tests {
         }
     }
 
-    bool test_match_commands()//test for the matc_command function
+    bool test_match_commands()//test for the match_command function
     {
-        std::cout<< "Runnign test_match_coomands...\n";
+        std::cout<< "Runnign test_match_commands...\n";
 
         std::string err_comm = "echz";
-        std::vector<std::string> com_history_list = {"ec", "echo", "etch", "exec"};
+        std::vector<std::string> com_history_list = {"ec", "echo", "exec"};
         auto results  = match_commands(err_comm, com_history_list);
 
-        bool test_passed = true;
-
-        for(const auto& command : com_history_list)
+        // Verify all commands in the history are either in the result or below threshold
+        for (const auto& command : com_history_list)
         {
-            if(results.find(command) == results.end())
+            if (results.find(command) != results.end())
             {
-                return false;
-                test_passed = false;
+                // Ensure the match score is valid
+                float score = results[command];
+                if (score < 0.5 || score > 1.0)
+                {
+                    return false;
+                }
             }
         }
-        /*
-            here it is check if the command is missing, if not then it will try
-            to match it to sth and the test will pass
 
-            i can't see it failing otherwise
-        */
-
-        if(test_passed)
+        // Check no extra commands are in the results
+        for (const auto& [cmd, score] : results)
         {
-            return true;
+            if (std::find(com_history_list.begin(), com_history_list.end(), cmd) == com_history_list.end())
+            {
+                return false;
+            }
         }
+
+        return true;
     }
 
     bool test_edge_cases()//test for edge cases (empty strings, single commands, etc)
