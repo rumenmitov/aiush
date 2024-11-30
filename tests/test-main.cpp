@@ -2,6 +2,7 @@
 
 #include "test-history.hpp"
 #include "test-recommend.hpp"
+#include "test-match.hpp"
 
 
 int main(int argc, char *argv[])
@@ -10,6 +11,10 @@ int main(int argc, char *argv[])
     assert(Tests::test_recommend_mistype());
     assert(Tests::test_recommend_mistype_long());
     assert(Tests::test_recommend_mistype_short());
+
+    assert(Tests::test_match());
+    assert(Tests::test_match_commands());
+    assert(Tests::test_edge_cases());
     
     return 0;
 }
