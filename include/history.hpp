@@ -19,13 +19,6 @@ namespace History {
      * @brief Manages shell history.
      */
     class CmdHistory {
-
-	/* NOTE
-	   Weights for frequency and recency should add up to 1.0.
-	*/
-	static constexpr  float RecencyBias = 0.30;
-	static constexpr  float FrequencyBias = 0.25;
-	static constexpr  float MatchBias = 0.45;
 	
     private:
 	/**
@@ -34,6 +27,14 @@ namespace History {
 	unordered_map<string, CmdEntry> entries;
 
     public:
+	/* NOTE
+	   Weights for frequency and recency should add up to 1.0.
+	*/
+	static constexpr  float RecencyBias = 0.30;
+	static constexpr  float FrequencyBias = 0.25;
+	static constexpr  float MatchBias = 0.45;
+
+	
 	CmdHistory(void) {};
 
 	/**
@@ -45,5 +46,10 @@ namespace History {
 	 * @brief Gets score of a given entry. Returns 0, if entry does not exist.
 	 */
 	float get_score(const string&);
+
+	/**
+	 * @brief Get scores of all enrties.
+	 */
+	unordered_map<string, float> get_all_scores(void);
     };
 }
