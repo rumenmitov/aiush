@@ -1,6 +1,6 @@
-#include "weigh.hpp"
+#include "history.hpp"
 
-namespace Weigh {
+namespace History {
 
     float CmdHistory::get_score(const string& cmd) {
         // entry has not been seen before
@@ -26,6 +26,19 @@ namespace Weigh {
 
         return (freq * FrequencyBias) + (rec * RecencyBias);
     }
+
+
+    unordered_map<string, float> CmdHistory::get_all_scores(void) 
+    {
+	unordered_map<string, float> scores;
+
+	for (auto entry : entries) {
+	    scores[entry.first] = get_score(entry.first);
+	}
+
+	return scores;
+    }
+    
 
     
     void CmdHistory::update(const string& cmd) {

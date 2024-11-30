@@ -12,7 +12,9 @@ set(UTILLIB    aiushutil)
 
 
 add_library("${UTILLIB}" STATIC
-  lib/weigh.cpp
+  lib/history.cpp
+  lib/match_function.cpp
+  lib/recommend.cpp
 )
 
 add_executable("${EXECUTABLE}"
