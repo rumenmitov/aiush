@@ -1,10 +1,10 @@
 #include <cassert>
 
-#include "test-weigh.hpp"
+#include "test-history.hpp"
 
 
 int main(int argc, char *argv[])
 {
-    assert(Tests::test_weigh());
+    assert(Tests::test_history());
     return 0;
 }

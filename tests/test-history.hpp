@@ -1,12 +1,12 @@
-#include "weigh.hpp"
+#include "history.hpp"
 
 #include <unistd.h>
 
 
 namespace Tests {
     
-    bool test_weigh(void) {
-	Weigh::CmdHistory hist;
+    bool test_history(void) {
+	History::CmdHistory hist;
 
 	hist.update("echo");
 	hist.update("cd");

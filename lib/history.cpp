@@ -1,6 +1,6 @@
-#include "weigh.hpp"
+#include "history.hpp"
 
-namespace Weigh {
+namespace History {
 
     float CmdHistory::get_score(const string& cmd) {
         // entry has not been seen before

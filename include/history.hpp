@@ -5,7 +5,7 @@
 #include <string>
 #include <deque>
 
-namespace Weigh {
+namespace History {
     using namespace std;
 
     /**
@@ -23,8 +23,9 @@ namespace Weigh {
 	/* NOTE
 	   Weights for frequency and recency should add up to 1.0.
 	*/
-	static constexpr float RecencyBias = 0.75;
+	static constexpr  float RecencyBias = 0.30;
 	static constexpr  float FrequencyBias = 0.25;
+	static constexpr  float MatchBias = 0.45;
 	
     private:
 	/**
