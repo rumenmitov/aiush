@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <algorithm>
+#include <matching.hpp>
 
 //made another helping function to check if the 2 comannds match with a matching rate
 //of over 50%
