@@ -11,7 +11,7 @@ namespace Recommend {
     /**
      * @brief Manages state of the auto-correction engine.
      */
-    class Recommender 
+    struct Recommender 
     {
     public:
 	Recommender(void) {}
@@ -23,7 +23,9 @@ namespace Recommend {
 	 */
 	string recommend(const string& wrong_command);
 
-    private:
+	/**
+	 * @field Keeps track of successfully executed commands history.
+	 */
 	History::CmdHistory history;
     };
 }

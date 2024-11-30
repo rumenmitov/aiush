@@ -13,8 +13,8 @@ set(UTILLIB    aiushutil)
 
 add_library("${UTILLIB}" STATIC
   lib/history.cpp
-  lib/recommend.cpp
   lib/match_function.cpp
+  lib/recommend.cpp
 )
 
 add_executable("${EXECUTABLE}"

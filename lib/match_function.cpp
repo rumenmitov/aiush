@@ -37,7 +37,7 @@ float match(const std::string& str1, const std::string& str2)
 
 //i am still contemplating on what it should return
 
-std::unordered_map<std::string, float> match_command(std::string err_com, std::vector<std::string> com_history_list)
+std::unordered_map<std::string, float> match_commands(std::string err_com, std::vector<std::string> com_history_list)
 {
     std::unordered_map<std::string, float> matching_commands;
 

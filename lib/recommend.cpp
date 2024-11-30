@@ -1,6 +1,7 @@
 #include "recommend.hpp"
 #include "matching.hpp"
 
+
 namespace Recommend {
     string Recommender::recommend(const string &wrong_command) 
     {
@@ -28,7 +29,7 @@ namespace Recommend {
 
 	float max_score = 0;
 	string recommendation = "";
-	
+
 	
 	// for each match entry, add biased match score to get_score(entry)
 	for (auto entry : possibilities) {
