@@ -70,15 +70,25 @@ void executeCommand(std::vector<std::string>& args, Recommend::Recommender& reco
                 }
                 recommender.history.update(entry);
             } else {
-                
-                std::cout << "Did You Mean 'echo'? Press [Tab] to accept, [Enter] to reject it" << ".\n";
+		std::string wrong_command;
+		for (std::string arg : args) wrong_command += " " + arg;
+			
+		std::string recommendation = recommender.recommend(wrong_command);
+		std::vector<std::string> correctedArgs;
+		std::stringstream stream(recommendation);
+
+		std::string arg;
+		while (stream >> arg) correctedArgs.push_back(arg);
+
+                std::cout << "Did You Mean: " << std::endl;
+		std::cout << "$" << recommendation << std::endl;
+		std::cout << "Press [Tab] to accept, [Enter] to reject it.\n";
 
                 setRawMode(true); // Enable raw mode for immediate key capture
                 char userInput;
                 while (true) {
                     userInput = getchar();
-                    if (userInput == '\t') {
-                        std::vector<std::string> correctedArgs = {"echo"};
+                    if (userInput == '\t') {			
                         executeCommand(correctedArgs, recommender);
                         break;
                     } else if (userInput == '\n') {
