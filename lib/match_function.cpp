@@ -28,7 +28,7 @@ float match(const std::string& str1, const std::string& str2)
     }
 
     //now to check if their letters match over 50%
-    float matching_percentage = matching_chars / std::max(str1.size(), str2.size());
+    float matching_percentage = static_cast<float>(matching_chars) / std::max(str1.size(), str2.size());
 
     return matching_percentage;//rreturning the matching percentage
 }
@@ -37,14 +37,16 @@ float match(const std::string& str1, const std::string& str2)
 
 //i am still contemplating on what it should return
 
-std::unordered_map<std::string, float> match_commands(std::string err_com, std::vector<std::string> com_history_list)
+std::unordered_map<std::string, float> match_commands(const std::string& err_com, const std::vector<std::string>& com_history_list)
 {
+
+    float treshold = 0.5;
     std::unordered_map<std::string, float> matching_commands;
 
-    for(std::string& each_comm : com_history_list)//iterate through each command in the history
+    for(const std::string& each_comm : com_history_list)//iterate through each command in the history
     {
         float comm_match = match(err_com, each_comm);//saving the match as a variable
-        if(comm_match > 0.5)
+        if(comm_match > treshold)
         {
             matching_commands[each_comm] = comm_match;
         }
