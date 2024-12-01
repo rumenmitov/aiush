@@ -7,6 +7,21 @@
 #include <string>
 #include <algorithm>
 #include <recommend.hpp>
+#include <termios.h>
+
+// Function to configure terminal to disable line buffering
+void setRawMode(bool enable) {
+    static struct termios oldt, newt;
+    if (enable) {
+        tcgetattr(STDIN_FILENO, &oldt); // Save terminal settings
+        newt = oldt;
+        newt.c_lflag &= ~(ICANON | ECHO); // Disable canonical mode and echo
+        tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    } else {
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // Restore terminal settings
+    }
+}
+
 
 void executeCommand(std::vector<std::string>& args, Recommend::Recommender& recommender, int inputFd = 0, int outputFd = 1) {
     if (args.empty()) return;
@@ -32,10 +47,13 @@ void executeCommand(std::vector<std::string>& args, Recommend::Recommender& reco
         // Child process
         if (inputFd != 0) { dup2(inputFd, 0); close(inputFd); }
         if (outputFd != 1) { dup2(outputFd, 1); close(outputFd); }
+        int devNull = open("/dev/null", O_WRONLY);
+        if (devNull != -1) {
+            dup2(devNull, 2);
+            close(devNull);
+        }
         execvp(argv[0], argv.data());
-        perror("execvp failed");
-        exit(1);
-         // If execvp fails, exit with error
+        exit(127);
     } else if (pid > 0) {
         // Parent process
         int status;
@@ -52,7 +70,28 @@ void executeCommand(std::vector<std::string>& args, Recommend::Recommender& reco
                 }
                 recommender.history.update(entry);
             } else {
-                std::cout << "Command execution failed with exit code " << exitCode << ".\n";
+                
+                std::cout << "Did You Mean 'echo'? Press [Tab] to accept, [Enter] to reject it" << ".\n";
+
+                setRawMode(true); // Enable raw mode for immediate key capture
+                char userInput;
+                while (true) {
+                    userInput = getchar();
+                    if (userInput == '\t') {
+                        std::vector<std::string> correctedArgs = {"echo"};
+                        executeCommand(correctedArgs);
+                        break;
+                    } else if (userInput == '\n') {
+                        std::cout << "Command rejected.\n";
+                        break;
+                    } else if (std::cin.eof()) {
+                        std::cout << "\nExiting shell...\n";
+                        exit(0);
+                    } else {
+                        std::cout << "Invalid input. Press [Tab] to accept, [Enter] to reject.\n";
+                    }
+                }
+                setRawMode(false); // Restore normal terminal behavior
             }
         }
 
@@ -72,7 +111,6 @@ void executeCommand(std::vector<std::string>& args, Recommend::Recommender& reco
         if (inputFd != 0) close(inputFd);
         if (outputFd != 1) close(outputFd);
     } else {
-        // Fork failed
         perror("fork failed");
     }
 }
@@ -124,8 +162,13 @@ int main() {
 
     while (true) {
         std::cout << "aiush> ";
-        std::getline(std::cin, input);
-        
+
+        if (!std::getline(std::cin, input)) {
+            std::cout << "\nExiting shell...\n";
+            break;
+        }
+        if (input.empty()) continue;
+
         parseAndExecute(input, recommender);
     }
     return 0;
