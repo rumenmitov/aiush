@@ -17,5 +17,3 @@ float match(const std::string& str1, const std::string& str2);
     command using the "match" function
 */
 std::unordered_map<std::string, float> match_commands(const std::string& err_com, const std::vector<std::string>& com_history_list);
-
-
