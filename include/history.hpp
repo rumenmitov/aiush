@@ -45,11 +45,11 @@ namespace History {
 	/**
 	 * @brief Gets score of a given entry. Returns 0, if entry does not exist.
 	 */
-	float get_score(const string&);
+	double get_score(const string&);
 
 	/**
 	 * @brief Get scores of all enrties.
 	 */
-	unordered_map<string, float> get_all_scores(void);
+	unordered_map<string, double> get_all_scores(void);
     };
 }
