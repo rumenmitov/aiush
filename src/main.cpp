@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <recommend.hpp>
 #include <termios.h>
 
 // Function to configure terminal to disable line buffering
@@ -21,7 +22,8 @@ void setRawMode(bool enable) {
     }
 }
 
-void executeCommand(std::vector<std::string>& args, int inputFd = 0, int outputFd = 1) {
+
+void executeCommand(std::vector<std::string>& args, Recommend::Recommender& recommender, int inputFd = 0, int outputFd = 1) {
     if (args.empty()) return;
     for (auto it = args.begin(); it != args.end();) {
         if (*it == ">") {
@@ -61,7 +63,12 @@ void executeCommand(std::vector<std::string>& args, int inputFd = 0, int outputF
         if (WIFEXITED(status)) {
             int exitCode = WEXITSTATUS(status);
             if (exitCode == 0) {
-                std::cout << "Command executed successfully.\n";
+                std::string entry;
+                for(std::string arg : args)
+                {
+                    entry += " " + arg;
+                }
+                recommender.history.update(entry);
             } else {
                 
                 std::cout << "Did You Mean 'echo'? Press [Tab] to accept, [Enter] to reject it" << ".\n";
@@ -119,7 +126,7 @@ bool handleBuiltInCommands(const std::vector<std::string>& args) {
     return false;
 }
 
-void parseAndExecute(const std::string& input) {
+void parseAndExecute(const std::string& input, Recommend::Recommender& recommender) {
     std::istringstream iss(input);
     std::vector<std::string> args;
     std::string token;
@@ -132,7 +139,7 @@ void parseAndExecute(const std::string& input) {
         for (const auto& arg : args) {
             if (arg == "|") {
                 pipe(pipeFd);
-                executeCommand(cmd, inputFd, pipeFd[1]);
+                executeCommand(cmd, recommender, inputFd, pipeFd[1]);
                 close(pipeFd[1]);
                 inputFd = pipeFd[0];
                 cmd.clear();
@@ -140,23 +147,29 @@ void parseAndExecute(const std::string& input) {
                 cmd.push_back(arg);
             }
         }
-        executeCommand(cmd, inputFd, 1);
+        executeCommand(cmd, recommender, inputFd, 1);
         if (inputFd != 0) close(inputFd);
     } else {
-        executeCommand(args, 0, 1);
+        executeCommand(args, recommender, 0, 1);
     }
 }
 
 int main() {
     std::string input;
+
+    Recommend::Recommender recommender;
+   
+
     while (true) {
         std::cout << "aiush> ";
+
         if (!std::getline(std::cin, input)) {
             std::cout << "\nExiting shell...\n";
             break;
         }
         if (input.empty()) continue;
-        parseAndExecute(input);
+
+        parseAndExecute(input, recommender);
     }
     return 0;
 }
