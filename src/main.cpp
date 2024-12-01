@@ -79,7 +79,7 @@ void executeCommand(std::vector<std::string>& args, Recommend::Recommender& reco
                     userInput = getchar();
                     if (userInput == '\t') {
                         std::vector<std::string> correctedArgs = {"echo"};
-                        executeCommand(correctedArgs);
+                        executeCommand(correctedArgs, recommender);
                         break;
                     } else if (userInput == '\n') {
                         std::cout << "Command rejected.\n";
