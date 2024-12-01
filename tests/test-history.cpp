@@ -16,7 +16,7 @@ int main(void) {
     sleep(1);
     hist.update("cd");
 
-    assert(hist.get_score("cd") < hist.get_score("echo"));
+    assert(hist.get_score("cd") > hist.get_score("echo"));
     return 0;
 }
 

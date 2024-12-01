@@ -1,11 +1,13 @@
 #include "history.hpp"
 
+
 namespace History {
 
-    float CmdHistory::get_score(const string& cmd) {
+    double CmdHistory::get_score(const string& cmd) {
         // entry has not been seen before
         if (entries.count(cmd) == 0)
             return 0;
+
 
         CmdEntry entry = entries[cmd];
 
@@ -18,19 +20,24 @@ namespace History {
             else break;
         }
 
-        // freq measures occurences in the last 60s
-        float freq = (float) entry.occurences.size();
 
-        // rec measures the most recent entry
-        float rec  = (float)entry.occurences.back() / CLOCKS_PER_SEC;
+        // freq measures occurences in the last 60s
+        double freq = (float) entry.occurences.size();
+
+        // rec measures the most recent entry (more recent is better)
+	/* NOTE
+	 * rec is a negative value. Hence the further away the entry is from the current
+	 * time, the more it subtracts from the overall score.
+	 */
+        double rec  = difftime(entry.occurences.back(), time(nullptr));
 
         return (freq * FrequencyBias) + (rec * RecencyBias);
     }
 
 
-    unordered_map<string, float> CmdHistory::get_all_scores(void) 
+    unordered_map<string, double> CmdHistory::get_all_scores(void) 
     {
-	unordered_map<string, float> scores;
+	unordered_map<string, double> scores;
 
 	for (auto entry : entries) {
 	    scores[entry.first] = get_score(entry.first);

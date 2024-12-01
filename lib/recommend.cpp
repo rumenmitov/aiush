@@ -1,5 +1,6 @@
 #include "recommend.hpp"
 #include "matching.hpp"
+#include <cmath>
 
 
 namespace Recommend {
@@ -7,7 +8,7 @@ namespace Recommend {
     {
 	// calculate match score for wrong command
 	vector<string> commands_in_history; // TODO optimize later
-	unordered_map<string, float> scores = history.get_all_scores();
+	unordered_map<string, double> scores = history.get_all_scores();
 
 	if (scores.empty()) return "";
 
@@ -27,7 +28,7 @@ namespace Recommend {
 	if (commands_in_history.empty()) return "";
 	
 
-	float max_score = 0;
+	float max_score = -INFINITY;
 	string recommendation = "";
 
 	

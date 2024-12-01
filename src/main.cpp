@@ -74,6 +74,8 @@ void executeCommand(std::vector<std::string>& args, Recommend::Recommender& reco
 		for (std::string arg : args) wrong_command += " " + arg;
 			
 		std::string recommendation = recommender.recommend(wrong_command);
+		if (recommendation.empty()) return;
+
 		std::vector<std::string> correctedArgs;
 		std::stringstream stream(recommendation);
 
