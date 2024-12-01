@@ -69,9 +69,11 @@ void executeCommand(std::vector<std::string>& args, Recommend::Recommender& reco
                     entry += " " + arg;
                 }
                 recommender.history.update(entry);
-            } else {
+            } else {		
 		std::string wrong_command;
 		for (std::string arg : args) wrong_command += " " + arg;
+
+		std::cout << "Command not found: " << wrong_command << std::endl;
 			
 		std::string recommendation = recommender.recommend(wrong_command);
 		if (recommendation.empty()) return;
@@ -127,11 +129,13 @@ void executeCommand(std::vector<std::string>& args, Recommend::Recommender& reco
     }
 }
 
-bool handleBuiltInCommands(const std::vector<std::string>& args) {
+bool handleBuiltInCommands(const std::vector<std::string>& args, Recommend::Recommender& recommender) {
     if (args.empty()) return false;
     if (args[0] == "cd") {
         if (args.size() < 2) std::cerr << "cd: missing argument\n";
         else if (chdir(args[1].c_str()) != 0) perror("cd failed");
+
+	recommender.history.update("cd " + args[1]);
         return true;
     }
     if (args[0] == "exit") exit(0);
@@ -144,13 +148,13 @@ void parseAndExecute(const std::string& input, Recommend::Recommender& recommend
     std::string token;
     while (iss >> token) args.push_back(token);
     if (args.empty()) return;
-    if (handleBuiltInCommands(args)) return;
+    if (handleBuiltInCommands(args, recommender)) return;
     if (std::find(args.begin(), args.end(), "|") != args.end()) {
         std::vector<std::string> cmd;
         int pipeFd[2], inputFd = 0;
         for (const auto& arg : args) {
             if (arg == "|") {
-                pipe(pipeFd);
+                (void) pipe(pipeFd);
                 executeCommand(cmd, recommender, inputFd, pipeFd[1]);
                 close(pipeFd[1]);
                 inputFd = pipeFd[0];
@@ -176,7 +180,6 @@ int main() {
         std::cout << "aiush> ";
 
         if (!std::getline(std::cin, input)) {
-            std::cout << "\nExiting shell...\n";
             break;
         }
         if (input.empty()) continue;
